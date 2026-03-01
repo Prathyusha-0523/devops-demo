@@ -48,8 +48,8 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                kubectl apply -f deployment.yaml
-                kubectl apply -f service.yaml
+                kubectl apply -f devops-deployment.yaml
+                kubectl apply -f devops-service.yaml
                 '''
             }
         }
