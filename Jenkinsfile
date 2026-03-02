@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'docker-pass'     // Jenkins credentials ID
+        DOCKERHUB_CREDENTIALS = 'docker-pass'
         IMAGE_NAME = 'prathyushaesh/devops-demo'
         IMAGE_TAG = 'v1'
     }
@@ -17,9 +17,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                docker build -t $IMAGE_NAME:$IMAGE_TAG .
-                '''
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
             }
         }
 
@@ -39,20 +37,23 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                sh '''
-                docker push $IMAGE_NAME:$IMAGE_TAG
-                '''
+                sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
             }
         }
 
         stage('Deploy to Kubernetes') {
-    withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG')]) {
-        sh   '''
-            kubectl apply -f devops-deployment.yaml
-            kubectl apply -f devops-service.yaml
-            '''
-    }
-}
+            steps {
+                withCredentials([file(
+                    credentialsId: 'minikube-kubeconfig',
+                    variable: 'KUBECONFIG'
+                )]) {
+                    sh '''
+                    kubectl apply -f devops-deployment.yaml
+                    kubectl apply -f devops-service.yaml
+                    '''
+                }
+            }
+        }
     }
 
     post {
