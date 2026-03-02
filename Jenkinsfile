@@ -49,7 +49,7 @@ pipeline {
                 )]) {
                     sh '''
                     kubectl apply -f devops-deployment.yaml
-                    kubectl apply -f devops-service.yaml
+                  
                     '''
                 }
             }
